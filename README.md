@@ -11,7 +11,7 @@ this line of code imports <b>all</b> the functions available in this package.
 
 ## Functions
 | Functions | parameters | Output |
-|---------|--------------------------------------|
+|---------|--------------------------------------|------|
 | `upper()` | `text` | returns the given text in uppercase. |
 | `lower()` | `text` | returns the given text in lowercase. |
 | `capitalize()` | `text` | converts each word's first letter to capital case. |
