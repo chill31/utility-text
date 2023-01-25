@@ -26,3 +26,6 @@ this line of code imports <b>all</b> the functions available in this package.
 | `camelCase()` | `text` | converts text to camel case |
 | `snakeCase()` | `text` | converts text to snake case |
 | `formatNumber()` | `text`, `locale` | formats a number by separating large numbers with commas. You can specify your locale otherwise it will choose the system locale. |
+
+## Full Docs
+visit The Full Documentation <a href="https://utility-text.vercel.app">here</a>. 
