@@ -1,0 +1,30 @@
+{
+  "name": "utility-text",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    "default": "./src/common.js",
+    "node": "./src/common.js",
+    "import": "./src/module.js",
+    "require": "./src/common.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chill31/utility-text.git"
+  },
+  "author": "chill31",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chill31/utility-text/issues"
+  },
+  "homepage": "https://github.com/chill31/utility-text#readme",
+  "keywords": [
+    "utility",
+    "text",
+    "text-manipulation",
+    "text-util"
+  ]
+}
