@@ -1,6 +1,6 @@
 {
   "name": "utility-text",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "this package helps with text functions and other things like advanced replace, snake_case, other conversions ad useful methods.",
   "exports": {
     "default": "./src/common.js",
