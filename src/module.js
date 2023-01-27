@@ -94,7 +94,7 @@ function analyze({ text, occurence, strict = true }) {
     return count;
   } else {
     let str = text.toLowerCase();
-    let word = occurence;
+    let word = occurence.toLowerCase();
     let count = 0;
 
     str = str.replace(new RegExp(word, "g"), function () {
