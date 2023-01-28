@@ -28,6 +28,10 @@ this line of code imports <b>all</b> the functions available in this package.
 | `formatNumber()` | `text`, `locale` | formats a number by separating large numbers with commas. You can specify your locale otherwise it will choose the system locale. | <i>String &lt;LocaleString&gt;</i> |
 | `isValidEmail()` | `text` | checks whether the given text is an email or not | <i>Boolean</i> |
 | `isValidURL()` | `text` | checks whether the given text is a url or not | <i>Boolean</i> |
+| `charCount()` | `text`, `exceptions` | returns character count with exceptions | <i>Object</i> |
+| `normalize()` | `text`, `customSymbols` | removes all symbols, including the given custom ones, and returns the text with first letter capitalized. | <i>String</i> |
+| `removeDuplicates()` | `text`, `strict` | removes all duplicates | <i>String</i> |
+| `minMax()` | `text` | returns the shortest and longest words in the given text | <i>Object</i> |
 
 ## Full Docs
 visit The Full Documentation <a href="https://utility-text.vercel.app">here</a>. 
