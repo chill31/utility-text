@@ -6,6 +6,15 @@ function isValidURL(url) {
   }
 }
 
+function isValidEmail(mail) {
+  const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
+  if(emailCheck.test(mail) === true) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function upper(text) {
   return text.toUpperCase();
 }
@@ -81,10 +90,10 @@ function advanceReplace({ text, replacementText, replacement, countIndex }) {
   return str;
 }
 
-function analyze({ text, occurence, strict = true }) {
+function analyze({ text, charSet, strict = true }) {
   if (strict === true) {
     let str = text;
-    let word = occurence;
+    let word = charSet;
     let count = 0;
 
     str = str.replace(new RegExp(word, "g"), function () {
@@ -94,7 +103,7 @@ function analyze({ text, occurence, strict = true }) {
     return count;
   } else {
     let str = text.toLowerCase();
-    let word = occurence.toLowerCase();
+    let word = charSet.toLowerCase();
     let count = 0;
 
     str = str.replace(new RegExp(word, "g"), function () {
@@ -194,5 +203,7 @@ export default {
   slug,
   camelCase,
   snakeCase,
-  formatNumber
+  formatNumber,
+  isValidEmail,
+  isValidURL
 };
