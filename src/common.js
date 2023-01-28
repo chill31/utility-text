@@ -6,8 +6,6 @@ function isValidURL(url) {
   }
 }
 
-console.log(isValidURL("bing.com"))
-
 function isValidEmail(mail) {
   const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
   if(emailCheck.test(mail) === true) {
