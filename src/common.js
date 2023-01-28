@@ -6,6 +6,8 @@ function isValidURL(url) {
   }
 }
 
+console.log(isValidURL("bing.com"))
+
 function isValidEmail(mail) {
   const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
   if(emailCheck.test(mail) === true) {
@@ -189,6 +191,61 @@ function formatNumber(num, locale) {
   }
 }
 
+function charCount(text, exceptions = []) {
+  let newText = text;
+  exceptions.forEach((exception) => {
+    newText = text.replaceAll(exception, "");
+  });
+
+  return {
+    charCount: newText.length,
+    wordCount: newText.split(" ").length,
+    noSpacesCount: newText.replaceAll(/ /g, "").length
+  }
+}
+
+function normalize(text, customSymbols = []) {
+  const symbols = [ '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '"', ':', '?', '>', '<', ';', '.', ',']
+  customSymbols.forEach((symb) => {
+    symbols.push(symb);
+  });
+
+  let newText = text;
+
+  symbols.forEach((sym) => {
+    newText = text.replaceAll(sym, "");
+  });
+
+  let final = newText.toLowerCase().split(" ");
+  let firstWord = capitalize(final[0]);
+  
+  final.shift();
+  return firstWord + " " + final.join(" ");
+}
+
+function removeDuplicates(text, strict = true) {
+  if(strict === true) {
+    return Array.from(new Set(text.split(' '))).join(" ")
+  } else {
+    return Array.from(new Set(text.toLowerCase().split(' '))).join(" ")
+  }
+}
+
+function minMax(text) {
+
+  const arr = text.split(" ");
+  const lengths = [];
+
+  arr.forEach((item) => {
+    lengths.push(item.length);
+  });
+
+  return {
+    longest: arr[lengths.indexOf(Math.max(...lengths))],
+    shortest: arr[lengths.indexOf(Math.min(...lengths))]
+  }
+}
+
 module.exports = {
   upper,
   lower,
@@ -205,5 +262,9 @@ module.exports = {
   snakeCase,
   formatNumber,
   isValidEmail,
-  isValidURL
+  isValidURL,
+  charCount,
+  normalize,
+  removeDuplicates,
+  minMax
 };
