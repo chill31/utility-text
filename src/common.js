@@ -280,10 +280,6 @@ function compare(text1, text2) {
     {message: "both indexes exist but are not equal", code: 2}
   ]
 
-  // text1 is undefined and text2 is existent
-  // text2 is undefined and text1 is existent
-  // text1 != text2
-
   for(let i = 0; i < maxLen; i++) {
     
     if(!firstText[i] && !!secondText[i]) {
@@ -317,13 +313,6 @@ function compare(text1, text2) {
 
   return differences;
 }
-
-console.log(
-  compare(
-    "he",
-    "hi"
-  )
-)
 
 module.exports = {
   upper,

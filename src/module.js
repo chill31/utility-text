@@ -280,10 +280,6 @@ function compare(text1, text2) {
     {message: "both indexes exist but are not equal", code: 2}
   ]
 
-  // text1 is undefined and text2 is existent
-  // text2 is undefined and text1 is existent
-  // text1 != text2
-
   for(let i = 0; i < maxLen; i++) {
     
     if(!firstText[i] && !!secondText[i]) {
@@ -291,6 +287,7 @@ function compare(text1, text2) {
         firstText: null,
         secondText: secondText[i],
         difference: secondText[i],
+        atIndex: i,
         type: diffTypes[0]
         
       });
@@ -299,6 +296,7 @@ function compare(text1, text2) {
         firstText: firstText[i],
         secondText: null,
         difference: firstText[i],
+        atIndex: i,
         type: diffTypes[1]
       });
     } else if(firstText[i] !== secondText[i]) {
@@ -306,6 +304,7 @@ function compare(text1, text2) {
         firstText: firstText[i],
         secondText: secondText[i],
         difference: secondText[i],
+        atIndex: i,
         type: diffTypes[2]
       })
     }
