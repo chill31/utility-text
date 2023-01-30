@@ -6,6 +6,8 @@ this package helps with text functions and other things like advanced replace, s
 first, to access all the methods, you need to install the package and then type out this code:
 ```js
 const utils = require("utility-text");
+/* --- OR --- */
+import utils from 'utility-text';
 ```
 this line of code imports <b>all</b> the functions available in this package.
 
