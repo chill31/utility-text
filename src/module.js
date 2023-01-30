@@ -244,6 +244,77 @@ function minMax(text) {
   }
 }
 
+function wrap({text, char, wrapper}) {
+
+  return text.replaceAll(char, `${wrapper[0]}${char}${wrapper[1]}`);
+
+}
+
+function multipleWrap({text, charSet, wrapperSet}) {
+  let newText = text;
+
+  if (charSet.length !== wrapperSet.length) {
+    throw new Error("The length of both charSet and wrapperSet should be the same.");
+  }
+
+  const len = charSet.length;
+
+  for (let i = 0; i < len; i++) {
+    const regex = new RegExp(charSet[i], "g");
+    newText = newText.replace(regex, `${wrapperSet[i][0]}${charSet[i]}${wrapperSet[i][1]}`);
+  }
+
+  return newText;
+}
+
+function compare(text1, text2) {
+  let differences = [];
+  let firstText = text1.toString();
+  let secondText = text2.toString();
+
+  let maxLen = Math.max(firstText.length, secondText.length);
+
+  const diffTypes = [
+    {message: "first text's index is non-existent while the second text's index exists.", code: 0},
+    {message: "second text's index is non-existent while the first text's index exists.", code: 1},
+    {message: "both indexes exist but are not equal", code: 2}
+  ]
+
+  // text1 is undefined and text2 is existent
+  // text2 is undefined and text1 is existent
+  // text1 != text2
+
+  for(let i = 0; i < maxLen; i++) {
+    
+    if(!firstText[i] && !!secondText[i]) {
+      differences.push({
+        firstText: null,
+        secondText: secondText[i],
+        difference: secondText[i],
+        type: diffTypes[0]
+        
+      });
+    } else if(!secondText[i] && !!firstText[i]) {
+      differences.push({
+        firstText: firstText[i],
+        secondText: null,
+        difference: firstText[i],
+        type: diffTypes[1]
+      });
+    } else if(firstText[i] !== secondText[i]) {
+      differences.push({
+        firstText: firstText[i],
+        secondText: secondText[i],
+        difference: secondText[i],
+        type: diffTypes[2]
+      })
+    }
+
+  }
+
+  return differences;
+}
+
 export default {
   upper,
   lower,
@@ -264,5 +335,8 @@ export default {
   charCount,
   normalize,
   removeDuplicates,
-  minMax
+  minMax,
+  wrap,
+  multipleWrap,
+  compare
 };
