@@ -32,6 +32,9 @@ this line of code imports <b>all</b> the functions available in this package.
 | `normalize()` | `text`, `customSymbols` | removes all symbols, including the given custom ones, and returns the text with first letter capitalized. | <i>String</i> |
 | `removeDuplicates()` | `text`, `strict` | removes all duplicates | <i>String</i> |
 | `minMax()` | `text` | returns the shortest and longest words in the given text | <i>Object</i> |
+| `wrap()` | `{text, char, wrapper}` | returns the wrapped text | <i>String</i> |
+| `multipleWrap()` | `{text, charSet, wrapperSet}` | returns the wrapped text | <i>String</i> |
+| `compare()` | `text1`, `text2` | returns the comparison of both texts | <i>Array</i>
 
 ## Full Docs
 visit The Full Documentation <a href="https://utility-text.vercel.app">here</a>. 
