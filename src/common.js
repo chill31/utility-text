@@ -291,6 +291,7 @@ function compare(text1, text2) {
         firstText: null,
         secondText: secondText[i],
         difference: secondText[i],
+        atIndex: i,
         type: diffTypes[0]
         
       });
@@ -299,6 +300,7 @@ function compare(text1, text2) {
         firstText: firstText[i],
         secondText: null,
         difference: firstText[i],
+        atIndex: i,
         type: diffTypes[1]
       });
     } else if(firstText[i] !== secondText[i]) {
@@ -306,6 +308,7 @@ function compare(text1, text2) {
         firstText: firstText[i],
         secondText: secondText[i],
         difference: secondText[i],
+        atIndex: i,
         type: diffTypes[2]
       })
     }
@@ -314,6 +317,13 @@ function compare(text1, text2) {
 
   return differences;
 }
+
+console.log(
+  compare(
+    "he",
+    "hi"
+  )
+)
 
 module.exports = {
   upper,
