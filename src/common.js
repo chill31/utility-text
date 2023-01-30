@@ -314,15 +314,15 @@ function compare(text1, text2) {
   return differences;
 }
 
-function insertAt({text, index, replacement, before}) {
+function insertAt({text, index, insertionText, before = false}) {
   let newText = text;
   
   if(text[index] === null || text[index] === undefined) throw new Error("the index must be existent in the provided text."); 
   
-  if (before) {
-    newText = text.slice(0, index) + replacement + text.slice(index);
+  if (before === true) {
+    newText = text.slice(0, index) + insertionText + text.slice(index);
   } else {
-    newText = text.slice(0, index + 1) + replacement + text.slice(index + 1);
+    newText = text.slice(0, index + 1) + insertionText + text.slice(index + 1);
   }
   
   return newText;
