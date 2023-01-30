@@ -36,7 +36,8 @@ this line of code imports <b>all</b> the functions available in this package.
 | `minMax()` | `text` | returns the shortest and longest words in the given text | <i>Object</i> |
 | `wrap()` | `{text, char, wrapper}` | returns the wrapped text | <i>String</i> |
 | `multipleWrap()` | `{text, charSet, wrapperSet}` | returns the wrapped text | <i>String</i> |
-| `compare()` | `text1`, `text2` | returns the comparison of both texts | <i>Array</i>
+| `compare()` | `text1`, `text2` | returns the comparison of both texts | <i>Array</i> |
+| `insertAt()` | `{text, index, replacement, before}` | returns the text with the given replacement inserted at the index | <i>String</i> |
 
 ## Full Docs
 visit The Full Documentation <a href="https://utility-text.vercel.app">here</a>. 

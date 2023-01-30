@@ -314,6 +314,20 @@ function compare(text1, text2) {
   return differences;
 }
 
+function insertAt({text, index, replacement, before}) {
+  let newText = text;
+  
+  if(text[index] === null || text[index] === undefined) throw new Error("the index must be existent in the provided text."); 
+  
+  if (before) {
+    newText = text.slice(0, index) + replacement + text.slice(index);
+  } else {
+    newText = text.slice(0, index + 1) + replacement + text.slice(index + 1);
+  }
+  
+  return newText;
+}
+
 module.exports = {
   upper,
   lower,
@@ -337,5 +351,6 @@ module.exports = {
   minMax,
   wrap,
   multipleWrap,
-  compare
+  compare,
+  insertAt
 };
