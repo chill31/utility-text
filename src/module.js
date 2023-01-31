@@ -50,27 +50,24 @@ function toggleCase(text) {
 }
 
 function oppositeCase(text, upperFirst = true) {
-  let updatedText;
-
-  if (upperFirst === true) {
-    for (let i = 0; i < text.length; i++) {
-      if (i % 2 == 0) {
-        updatedText += text[i].toUpperCase();
-      } else if (i % 2 != 0) {
-        updatedText += text[i].toLowerCase();
+  let updatedText = "";
+  for (let i = 0; i < text.length; i++) {
+    let char = text[i];
+    if (i % 2 === 0) {
+      if (upperFirst) {
+        updatedText += char.toUpperCase();
+      } else {
+        updatedText += char.toLowerCase();
       }
-    }
-  } else {
-    for (let i = 0; i < text.length; i++) {
-      if (i % 2 == 0) {
-        updatedText += text[i].toLowerCase();
-      } else if (i % 2 != 0) {
-        updatedText += text[i].toUpperCase();
+    } else {
+      if (upperFirst) {
+        updatedText += char.toLowerCase();
+      } else {
+        updatedText += char.toUpperCase();
       }
     }
   }
-
-  return updatedText.split("undefined")[1];
+  return updatedText;
 }
 
 function advanceReplace({ text, replacementText, replacement, countIndex, skip = 0 }) {
