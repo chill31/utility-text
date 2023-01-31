@@ -8,7 +8,7 @@ function isValidURL(url) {
 
 function isValidEmail(mail) {
   const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
-  if(emailCheck.test(mail) === true) {
+  if (emailCheck.test(mail) === true) {
     return true;
   } else {
     return false;
@@ -189,7 +189,7 @@ function snakeCase(text) {
 function formatNumber(num, locale) {
   try {
     return num.toLocaleString(locale);
-  } catch(err) {
+  } catch (err) {
     return num.toLocaleString();
   }
 }
@@ -208,7 +208,7 @@ function charCount(text, exceptions = []) {
 }
 
 function normalize(text, customSymbols = []) {
-  const symbols = [ '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '"', ':', '?', '>', '<', ';', '.', ',']
+  const symbols = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '"', ':', '?', '>', '<', ';', '.', ',']
   customSymbols.forEach((symb) => {
     symbols.push(symb);
   });
@@ -221,13 +221,13 @@ function normalize(text, customSymbols = []) {
 
   let final = newText.toLowerCase().split(" ");
   let firstWord = capitalize(final[0]);
-  
+
   final.shift();
   return firstWord + " " + final.join(" ");
 }
 
 function removeDuplicates(text, strict = true) {
-  if(strict === true) {
+  if (strict === true) {
     return Array.from(new Set(text.split(' '))).join(" ")
   } else {
     return Array.from(new Set(text.toLowerCase().split(' '))).join(" ")
@@ -249,13 +249,13 @@ function minMax(text) {
   }
 }
 
-function wrap({text, char, wrapper}) {
+function wrap({ text, char, wrapper }) {
 
   return text.replaceAll(char, `${wrapper[0]}${char}${wrapper[1]}`);
 
 }
 
-function multipleWrap({text, charSet, wrapperSet}) {
+function multipleWrap({ text, charSet, wrapperSet }) {
   let newText = text;
 
   if (charSet.length !== wrapperSet.length) {
@@ -280,23 +280,23 @@ function compare(text1, text2) {
   let maxLen = Math.max(firstText.length, secondText.length);
 
   const diffTypes = [
-    {message: "first text's index is non-existent while the second text's index exists.", code: 0},
-    {message: "second text's index is non-existent while the first text's index exists.", code: 1},
-    {message: "both indexes exist but are not equal", code: 2}
+    { message: "first text's index is non-existent while the second text's index exists.", code: 0 },
+    { message: "second text's index is non-existent while the first text's index exists.", code: 1 },
+    { message: "both indexes exist but are not equal", code: 2 }
   ]
 
-  for(let i = 0; i < maxLen; i++) {
-    
-    if(!firstText[i] && !!secondText[i]) {
+  for (let i = 0; i < maxLen; i++) {
+
+    if (!firstText[i] && !!secondText[i]) {
       differences.push({
         firstText: null,
         secondText: secondText[i],
         difference: secondText[i],
         atIndex: i,
         type: diffTypes[0]
-        
+
       });
-    } else if(!secondText[i] && !!firstText[i]) {
+    } else if (!secondText[i] && !!firstText[i]) {
       differences.push({
         firstText: firstText[i],
         secondText: null,
@@ -304,7 +304,7 @@ function compare(text1, text2) {
         atIndex: i,
         type: diffTypes[1]
       });
-    } else if(firstText[i] !== secondText[i]) {
+    } else if (firstText[i] !== secondText[i]) {
       differences.push({
         firstText: firstText[i],
         secondText: secondText[i],
@@ -319,26 +319,26 @@ function compare(text1, text2) {
   return differences;
 }
 
-function insertAt({text, index, insertionText, before = false}) {
+function insertAt({ text, index, insertionText, before = false }) {
   let newText = text;
-  
-  if(text[index] === null || text[index] === undefined) throw new Error("the index must be existent in the provided text."); 
-  
+
+  if (text[index] === null || text[index] === undefined) throw new Error("the index must be existent in the provided text.");
+
   if (before === true) {
     newText = text.slice(0, index) + insertionText + text.slice(index);
   } else {
     newText = text.slice(0, index + 1) + insertionText + text.slice(index + 1);
   }
-  
+
   return newText;
 }
 
-function moveText({ text,moveText , moveIndex }) {
+function moveText({ text, moveText, moveIndex }) {
   const start = text.indexOf(moveText);
   if (start === -1) {
     return text;
   }
-  const stop = start +moveText .length - 1;
+  const stop = start + moveText.length - 1;
   const movingText = text.slice(start, stop + 1);
   const firstPart = text.slice(0, start);
   const secondPart = text.slice(stop + 1);
@@ -348,10 +348,10 @@ function moveText({ text,moveText , moveIndex }) {
   return firstPart + secondPart.slice(0, moveIndex - start) + movingText + secondPart.slice(moveIndex - start);
 }
 
-function moveTextByPos({text, coords, moveIndex}) {
-  
+function moveTextByPos({ text, coords, moveIndex }) {
+
   const [start, stop] = coords;
-  if(start > stop) throw new Error("'coords' error: Starting Coordinate (index 0) must be smaller than the stop coordinate");
+  if (start > stop) throw new Error("'coords' error: Starting Coordinate (index 0) must be smaller than the stop coordinate");
 
   const movingText = text.slice(start, stop + 1);
   const firstPart = text.slice(0, start);
