@@ -73,13 +73,18 @@ function oppositeCase(text, upperFirst = true) {
   return updatedText.split("undefined")[1];
 }
 
-function advanceReplace({ text, replacementText, replacement, countIndex }) {
+function advanceReplace({ text, replacementText, replacement, countIndex, skip = 0 }) {
   let str = text;
   let word = replacementText;
   let count = 0;
   let maxCount = countIndex;
+  let skipCount = 0;
 
   str = str.replace(new RegExp(word, "g"), function (match) {
+    if (skipCount < skip) {
+      skipCount++;
+      return match;
+    }
     if (count >= maxCount) {
       return match;
     }
@@ -328,6 +333,33 @@ function insertAt({text, index, insertionText, before = false}) {
   return newText;
 }
 
+function moveText({ text,moveText , moveIndex }) {
+  const start = text.indexOf(moveText);
+  if (start === -1) {
+    return text;
+  }
+  const stop = start +moveText .length - 1;
+  const movingText = text.slice(start, stop + 1);
+  const firstPart = text.slice(0, start);
+  const secondPart = text.slice(stop + 1);
+  if (moveIndex === 0) {
+    return movingText + firstPart + secondPart;
+  }
+  return firstPart + secondPart.slice(0, moveIndex - start) + movingText + secondPart.slice(moveIndex - start);
+}
+
+function moveTextByPos({text, coords, moveIndex}) {
+  
+  const [start, stop] = coords;
+  if(start > stop) throw new Error("'coords' error: Starting Coordinate (index 0) must be smaller than the stop coordinate");
+
+  const movingText = text.slice(start, stop + 1);
+  const firstPart = text.slice(0, start);
+  const secondPart = text.slice(stop + 1);
+  return (start === 0 ? "" : firstPart) + secondPart.slice(0, moveIndex - start) + movingText + secondPart.slice(moveIndex - start);
+
+}
+
 module.exports = {
   upper,
   lower,
@@ -352,5 +384,7 @@ module.exports = {
   wrap,
   multipleWrap,
   compare,
-  insertAt
+  insertAt,
+  moveText,
+  moveTextByPos,
 };
