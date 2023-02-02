@@ -205,22 +205,16 @@ function charCount(text, exceptions = []) {
 }
 
 function normalize(text, customSymbols = []) {
-  const symbols = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '"', ':', '?', '>', '<', ';', '.', ',']
+  const symbols = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '"', ':', '?', '>', '<', ';', '.', ',', '-']
   customSymbols.forEach((symb) => {
     symbols.push(symb);
   });
 
   let newText = text;
-
-  symbols.forEach((sym) => {
-    newText = text.replaceAll(sym, "");
+  symbols.forEach((s) => {
+    newText = newText.replaceAll(s, "");
   });
-
-  let final = newText.toLowerCase().split(" ");
-  let firstWord = capitalize(final[0]);
-
-  final.shift();
-  return firstWord + " " + final.join(" ");
+  return newText;
 }
 
 function removeDuplicates(text, strict = true) {
@@ -357,6 +351,83 @@ function moveTextByPos({ text, coords, moveIndex }) {
 
 }
 
+function listSearch({ searchList, searchText, returnAll = false }) {
+  let matches = [];
+  for (let i = 0; i < searchList.length; i++) {
+    const text = normalize(searchText).toLowerCase();
+    const string = normalize(searchList[i]).toLowerCase();
+
+    if (string.includes(text)) {
+      if (!returnAll) {
+        return {
+          found: true,
+          search: searchText,
+          match: searchList[i],
+          index: i
+        }
+      } else {
+        matches.push({
+          found: true,
+          search: searchText,
+          match: searchList[i],
+          index: i
+        });
+      }
+    }
+  }
+
+  if (matches.length > 0) {
+    return matches;
+  } else {
+    return {
+      found: false,
+      search: searchText,
+      match: -1,
+      index: -1
+    }
+  }
+}
+
+function objectSearch({searchList, searchText, searchKeys, returnAll = false}) {
+  const matches = [];
+  for(let i = 0; i < searchList.length; i++) {
+    const item = searchList[i];
+
+    for(let j = 0; j < searchKeys.length; j++) {
+      const key = searchKeys[j];
+      const text = normalize(searchText).toLowerCase();
+      const string = normalize(item[key]).toLowerCase();
+
+      if(string.includes(text)) {
+        matches.push({
+          found: true,
+          search: searchText,
+          match: item[key],
+          object: item,
+          key: key,
+          index: i
+        });
+        if (!returnAll) {
+          return matches;
+        }
+      }
+    }
+  }
+
+  if (!matches.length) {
+    return [{
+      found: false,
+      search: searchText,
+      match: -1,
+      object: -1,
+      key: -1,
+      index: -1
+    }];
+  }
+
+  return matches;
+}
+
 export default {
   upper,
   lower,
@@ -384,4 +455,6 @@ export default {
   insertAt,
   moveText,
   moveTextByPos,
+  listSearch,
+  objectSearch
 };
