@@ -428,6 +428,26 @@ function objectSearch({searchList, searchText, searchKeys, returnAll = false}) {
   return matches;
 }
 
+function encode(str) {
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    result += str.charCodeAt(i).toString(16);
+  }
+  return result;
+}
+
+function decode(encodedStr) {
+  let result = "";
+  for (let i = 0; i < encodedStr.length; i += 2) {
+    result += String.fromCharCode(parseInt(encodedStr.substr(i, 2), 16));
+  }
+  return result;
+}
+
+function unslug(text) {
+  return decodeURI(text);
+}
+
 export default {
   upper,
   lower,
@@ -456,5 +476,8 @@ export default {
   moveText,
   moveTextByPos,
   listSearch,
-  objectSearch
+  objectSearch,
+  encode,
+  decode,
+  unslug
 };
