@@ -448,6 +448,28 @@ function unslug(text) {
   return decodeURI(text);
 }
 
+function pushByFilter(array, filter, ...items) {
+  let newArr = array;
+  for (let item of items) {
+    if (filter(item)) {
+      newArr.push(item);
+    }
+  }
+
+  return newArr;
+}
+
+function flatten(arr) {
+  return arr.reduce((flat, next) => flat.concat(Array.isArray(next) ? flatten(next) : next), []);
+}
+
+function KebabCase(str) {
+  return str
+    .split(/[\s_]+/)
+    .join("-")
+    .toLowerCase();
+}
+
 export default {
   upper,
   lower,
@@ -479,5 +501,8 @@ export default {
   objectSearch,
   encode,
   decode,
-  unslug
+  unslug,
+  pushByFilter,
+  flatten,
+  KebabCase
 };
