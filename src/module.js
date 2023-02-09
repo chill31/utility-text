@@ -463,14 +463,36 @@ function flatten(arr) {
   return arr.reduce((flat, next) => flat.concat(Array.isArray(next) ? flatten(next) : next), []);
 }
 
-function KebabCase(str) {
+function kebabCase(str) {
   return str
     .split(/[\s_]+/)
     .join("-")
     .toLowerCase();
 }
 
-export default {
+function pullByValue(array, ...values) {
+  for (const value of values) {
+    const index = array.indexOf(value);
+    if (index !== -1) {
+      array.splice(index, 1);
+    }
+  }
+
+  return array;
+}
+
+function pullByIndex(array, ...indexes) {
+  for (let i = indexes.length - 1; i >= 0; i--) {
+    const index = indexes[i];
+    if (index >= 0 && index < array.length) {
+      array.splice(index, 1);
+    }
+  }
+
+  return array;
+}
+
+module.exports = {
   upper,
   lower,
   capitalize,
@@ -504,5 +526,7 @@ export default {
   unslug,
   pushByFilter,
   flatten,
-  KebabCase
+  kebabCase,
+  pullByValue,
+  pullByIndex
 };
