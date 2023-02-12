@@ -388,17 +388,17 @@ function listSearch({ searchList, searchText, returnAll = false }) {
   }
 }
 
-function objectSearch({searchList, searchText, searchKeys, returnAll = false}) {
+function objectSearch({ searchList, searchText, searchKeys, returnAll = false }) {
   const matches = [];
-  for(let i = 0; i < searchList.length; i++) {
+  for (let i = 0; i < searchList.length; i++) {
     const item = searchList[i];
 
-    for(let j = 0; j < searchKeys.length; j++) {
+    for (let j = 0; j < searchKeys.length; j++) {
       const key = searchKeys[j];
       const text = normalize(searchText).toLowerCase();
       const string = normalize(item[key]).toLowerCase();
 
-      if(string.includes(text)) {
+      if (string.includes(text)) {
         matches.push({
           found: true,
           search: searchText,
@@ -492,7 +492,16 @@ function pullByIndex(array, ...indexes) {
   return array;
 }
 
-module.exports = {
+function toAcronym(text) {
+  let acr = "";
+  for(let i = 0; i < text.split(" ").length; i++) {
+    acr += text.split(" ")[i][0].toUpperCase();
+  }
+
+  return acr;
+}
+
+export default {
   upper,
   lower,
   capitalize,
@@ -528,5 +537,6 @@ module.exports = {
   flatten,
   kebabCase,
   pullByValue,
-  pullByIndex
+  pullByIndex,
+  toAcronym
 };
