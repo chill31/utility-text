@@ -501,6 +501,27 @@ function toAcronym(text) {
   return acr;
 }
 
+function insertToArray({array, value, index, before = false}) {
+  let newArr = array;
+
+  if(before === false) {
+    newArr.splice(index + 1, 0, value);
+  } else {
+    newArr.splice(index, 0, value);
+  }
+
+  return newArr;
+}
+
+function shrink(array, tillIndex) {
+  let arr = [];
+  for (let i = 0; i < tillIndex; i++) {
+    arr.push(array[i]);
+  }
+
+  return arr;
+}
+
 module.exports = {
   upper,
   lower,
@@ -538,5 +559,7 @@ module.exports = {
   kebabCase,
   pullByValue,
   pullByIndex,
-  toAcronym
+  toAcronym,
+  insertToArray,
+  shrink
 };
