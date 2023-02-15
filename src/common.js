@@ -352,80 +352,80 @@ function moveTextByPos({ text, coords, moveIndex }) {
 }
 
 function listSearch({ searchList, searchText, returnAll = false }) {
-  let matches = [];
+  const matches = [];
+  const searchTextLC = normalize(searchText).toLowerCase();
+
   for (let i = 0; i < searchList.length; i++) {
-    const text = normalize(searchText).toLowerCase();
     const string = normalize(searchList[i]).toLowerCase();
 
-    if (string.includes(text)) {
+    if (string.includes(searchTextLC)) {
+      const match = {
+        found: true,
+        search: searchText,
+        match: searchList[i],
+        index: i
+      };
+
       if (!returnAll) {
-        return {
-          found: true,
-          search: searchText,
-          match: searchList[i],
-          index: i
-        }
-      } else {
-        matches.push({
-          found: true,
-          search: searchText,
-          match: searchList[i],
-          index: i
-        });
+        return [match];
       }
+
+      matches.push(match);
     }
   }
 
-  if (matches.length > 0) {
-    return matches;
-  } else {
-    return {
+  if (matches.length === 0) {
+    return [{
       found: false,
       search: searchText,
       match: -1,
       index: -1
-    }
+    }];
   }
+
+  return matches;
 }
 
 function objectSearch({ searchList, searchText, searchKeys, returnAll = false }) {
-  const matches = [];
-  for (let i = 0; i < searchList.length; i++) {
-    const item = searchList[i];
+  const matches = new Set();
+  const searchTextLC = normalize(searchText).toLowerCase();
+  const numKeys = searchKeys.length;
 
-    for (let j = 0; j < searchKeys.length; j++) {
+  for (const item of searchList) {
+    for (let j = 0; j < numKeys; j++) {
       const key = searchKeys[j];
-      const text = normalize(searchText).toLowerCase();
       const string = normalize(item[key]).toLowerCase();
 
-      if (string.includes(text)) {
-        matches.push({
+      if (string.includes(searchTextLC)) {
+        const match = {
           found: true,
           search: searchText,
           match: item[key],
           object: item,
           key: key,
-          index: i
-        });
+          index: searchList.indexOf(item)
+        };
+        matches.add(JSON.stringify(match));
         if (!returnAll) {
-          return matches;
+          return Array.from(matches).map(match => JSON.parse(match));
         }
       }
     }
   }
 
-  if (!matches.length) {
-    return [{
+  if (!matches.size) {
+    const noMatch = {
       found: false,
       search: searchText,
       match: -1,
       object: -1,
       key: -1,
       index: -1
-    }];
+    };
+    return [noMatch];
   }
 
-  return matches;
+  return Array.from(matches).map(match => JSON.parse(match));
 }
 
 function encode(str) {
