@@ -7,7 +7,7 @@ function isValidURL(url) {
 }
 
 function isValidEmail(mail) {
-  const emailCheck = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
+  const emailCheck = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/gi;
   if (emailCheck.test(mail) === true) {
     return true;
   } else {
@@ -141,8 +141,7 @@ function extractEmail({ text, wrap = ["<", ">"] }) {
   let words = text.split(" ");
   let extractedMails = [];
 
-  const emailCheck =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
+  const emailCheck = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/gi;
 
   for (let i = 0; i < words.length; i++) {
     if (emailCheck.test(words[i]) === true) {
