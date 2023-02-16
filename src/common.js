@@ -522,6 +522,15 @@ function shrink(array, tillIndex) {
   return arr;
 }
 
+function rangeShrink(array, range) {
+  let arr = [];
+  for(let i = range[0]; i <= range[1]; i++) {
+    arr.push(array[i]);
+  }
+
+  return arr;
+}
+
 module.exports = {
   upper,
   lower,
@@ -561,5 +570,6 @@ module.exports = {
   pullByIndex,
   toAcronym,
   insertToArray,
-  shrink
+  shrink,
+  rangeShrink
 };
