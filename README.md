@@ -31,6 +31,8 @@ some of the most used functions are (according to surveys and reviews):
 - <a href="https://utility-text.vercel.app/docs/pullByIndex">`pullByIndex(...)`</a>
 
 <br>
+The package also contains different utilities such as `PasswordUtil` class, which you can use for basic password utilities as the name suggests.
+<br>
 
 Check the full documentation below for all functions' detailed information
 

@@ -1,3 +1,5 @@
+import crypto from 'crypto'
+
 function isValidURL(url) {
   try {
     return Boolean(new URL(url));
@@ -582,6 +584,174 @@ function truncate({text, maxLength, ellipsis = {show: true, content: "..."}}) {
 
 }
 
+class PasswordUtil {
+
+  constructor() {
+    this.algorithm = 'sha512';
+  }
+
+  generatePassword({length, includeSymbols = true, includeNumbers = true, includeUpper = true, includeLower = true}) {
+
+    if (!includeSymbols && !includeNumbers && !includeUpper && !includeLower) {
+      throw new Error('At least one of includeSymbols, includeNumbers, includeUpper, or includeLower must be true');
+    }
+
+    if(length <= 0) {
+      throw new Error('password length must be larger than 0');
+    } 
+
+    const getRandomChar = {
+      lower: getRandomLower,
+      upper: getRandomUpper,
+      number: getRandomNumber,
+      symbol: getRandomSymbol,
+    };
+
+    function getSecureValue() {
+      const randomBytes = crypto.randomBytes(4);
+      const randomNumber = randomBytes.readUInt32BE(0) / (Math.pow(2, 32) - 1);
+
+      return randomNumber;
+    }
+
+    function getRandomLower() {
+      return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+    }
+
+    function getRandomUpper() {
+      return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+    }
+    
+    function getRandomNumber() {
+      return String.fromCharCode(Math.floor(getSecureValue() * 10) + 48)
+    }
+
+    function getRandomSymbol() {
+      const symbols = '~!@#$%^&*()_+{}":?><;.,';
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    function internalGenerate(length, lower, upper, number, symbol) {
+      let generatedPassword = "";
+      const typesCount = lower + upper + number + symbol;
+      const typesArr = [{ lower }, { upper }, { number }, { symbol }].filter((item) => Object.values(item)[0]);
+
+      if(typesCount === 0) {
+        return "";
+      }
+
+      for (let i = 0; i < length; i++) {
+
+        typesArr.forEach((type) => {
+          const name = Object.keys(type)[0]
+          generatedPassword += getRandomChar[name]();
+        })
+
+      };
+
+      return generatedPassword.slice(0, length).split("").sort(() => Math.random() - 0.5).join("");
+    }
+
+    return internalGenerate(length, includeLower, includeUpper, includeNumbers, includeSymbols);
+
+  }
+
+  checkPassword(password) {
+
+    function calculatePasswordStrength(password) {
+      const weaknesses = [];
+      weaknesses.push(lengthWeakness(password));
+      weaknesses.push(lowercaseWeakness(password));
+      weaknesses.push(uppercaseWeakness(password));
+      weaknesses.push(numberWeakness(password));
+      weaknesses.push(specialCharactersWeakness(password));
+      weaknesses.push(repeatCharactersWeakness(password));
+      return weaknesses;
+    }
+    
+    function lengthWeakness(password) {
+      const length = password.length;
+    
+      if (length <= 5) {
+        return {
+          message: "Your password is too short",
+        };
+      }
+    
+      if (length <= 10) {
+        return {
+          message: "Your password could be longer",
+        };
+      }
+    }
+    
+    function uppercaseWeakness(password) {
+      return characterTypeWeakness(password, /[A-Z]/g, "uppercase characters");
+    }
+    
+    function lowercaseWeakness(password) {
+      return characterTypeWeakness(password, /[a-z]/g, "lowercase characters");
+    }
+    
+    function numberWeakness(password) {
+      return characterTypeWeakness(password, /[0-9]/g, "numbers");
+    }
+    
+    function specialCharactersWeakness(password) {
+      return characterTypeWeakness(
+        password,
+        /[^0-9a-zA-Z\s]/g,
+        "special characters"
+      );
+    }
+    
+    function characterTypeWeakness(password, regex, type) {
+      const matches = password.match(regex) || [];
+    
+      if (matches.length === 0) {
+        return {
+          message: `Your password has no ${type}`,
+        };
+      }
+    
+      if (matches.length <= 2) {
+        return {
+          message: `Your password could use more ${type}`,
+        };
+      }
+    }
+    
+    function repeatCharactersWeakness(password) {
+      const matches = password.match(/(.)\1/g) || [];
+      if (matches.length > 0) {
+        return {
+          message: "Your password has repeat characters",
+        };
+      }
+    }
+
+    const weaknesses = calculatePasswordStrength(password)
+    const newWeaknesses = []
+    const final = pushByFilter(newWeaknesses, (v => v !== undefined), ...weaknesses);
+
+    if(final.length === 0) {
+      return 'No Weaknesses';
+    }
+
+    return final
+
+  }
+
+  hashPassword(password, salt = 'salt') {
+    return crypto.pbkdf2Sync(password, salt, 1000, 64, this.algorithm).toString('hex');
+  }
+
+  generateSalt(length) {
+    return crypto.randomBytes(length).toString('hex');
+  }
+
+}
+
 export default {
   upper,
   lower,
@@ -626,5 +796,6 @@ export default {
   escape,
   unescape,
   stripHTML,
-  truncate
+  truncate,
+  PasswordUtil
 };
