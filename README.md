@@ -2,6 +2,13 @@
 this package helps with text functions and other things like advanced replace, snake_case, other conversions ad useful methods.
 <br>This package works both in ES Modules and Common JS projects.
 
+- ES Modules Support
+- Small Unpacked size
+- Singular imports
+
+> Download the package and start developing to see more features...
+
+
 ## Starting With the Package
 first, to access all the methods, you need to install the package and then type out this code:
 ```js
