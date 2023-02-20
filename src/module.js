@@ -530,6 +530,55 @@ function rangeShrink(array, range) {
   return arr;
 }
 
+function escape(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+    '/': '&#x2F;',
+  };
+  
+  const reg = /[&<>"'/]/ig;
+  
+  return text.replace(reg, (match) => map[match]);
+}
+
+function unescape(text) {
+  const map = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#039;': "'",
+    '&#x2F;': '/',
+  };
+
+  const reg = /&(amp|lt|gt|quot|#039|#x2F);/ig;
+
+  return text.replace(reg, (match) => map[match]);
+}
+
+function stripHTML(text) {
+  return text.replace(/<[^>]*>/g, '');
+}
+
+function truncate({text, maxLength, ellipsis = {show: true, content: "..."}}) {
+
+  if(text.length <= maxLength) {
+    return text;
+  }
+
+  const truncated = text.slice(0, maxLength);
+  if(ellipsis.show === true) {
+    return truncated + ellipsis.content
+  }
+
+  return truncated
+
+}
+
 export default {
   upper,
   lower,
@@ -570,5 +619,9 @@ export default {
   toAcronym,
   insertToArray,
   shrink,
-  rangeShrink
+  rangeShrink,
+  escape,
+  unescape,
+  stripHTML,
+  truncate
 };
