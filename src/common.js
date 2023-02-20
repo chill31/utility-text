@@ -209,7 +209,7 @@ function normalize(text, customSymbols = []) {
     symbols.push(symb);
   });
 
-  let newText = text;
+  let newText = capitalize(lower(text));
   symbols.forEach((s) => {
     newText = newText.replaceAll(s, "");
   });
