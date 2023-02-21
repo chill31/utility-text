@@ -4,7 +4,7 @@ this package helps with text functions and other things like advanced replace, s
 
 - ES Modules Support
 - Small Unpacked size
-- Efficient and Easy to use
+- Efficient/Fast and Easy to use
 - Singular imports
 - Easy debugging
 
