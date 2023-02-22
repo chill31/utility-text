@@ -773,7 +773,7 @@ function minDistance(text, comparison) {
 
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
-      if (str1[i - 1] === str2[j - 1]) {
+      if (text[i - 1] === comparison[j - 1]) {
         dp[i][j] = dp[i - 1][j - 1];
       } else {
         dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
