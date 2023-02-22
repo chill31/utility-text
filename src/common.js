@@ -498,17 +498,17 @@ function pullByIndex(array, ...indexes) {
 
 function toAcronym(text) {
   let acr = "";
-  for(let i = 0; i < text.split(" ").length; i++) {
+  for (let i = 0; i < text.split(" ").length; i++) {
     acr += text.split(" ")[i][0].toUpperCase();
   }
 
   return acr;
 }
 
-function insertToArray({array, value, index, before = false}) {
+function insertToArray({ array, value, index, before = false }) {
   let newArr = array;
 
-  if(before === false) {
+  if (before === false) {
     newArr.splice(index + 1, 0, value);
   } else {
     newArr.splice(index, 0, value);
@@ -528,7 +528,7 @@ function shrink(array, tillIndex) {
 
 function rangeShrink(array, range) {
   let arr = [];
-  for(let i = range[0]; i <= range[1]; i++) {
+  for (let i = range[0]; i <= range[1]; i++) {
     arr.push(array[i]);
   }
 
@@ -544,9 +544,9 @@ function escape(text) {
     "'": '&#039;',
     '/': '&#x2F;',
   };
-  
+
   const reg = /[&<>"'/]/ig;
-  
+
   return text.replace(reg, (match) => map[match]);
 }
 
@@ -569,14 +569,14 @@ function stripHTML(text) {
   return text.replace(/<[^>]*>/g, '');
 }
 
-function truncate({text, maxLength, ellipsis = {show: true, content: "..."}}) {
+function truncate({ text, maxLength, ellipsis = { show: true, content: "..." } }) {
 
-  if(text.length <= maxLength) {
+  if (text.length <= maxLength) {
     return text;
   }
 
   const truncated = text.slice(0, maxLength);
-  if(ellipsis.show === true) {
+  if (ellipsis.show === true) {
     return truncated + ellipsis.content
   }
 
@@ -590,15 +590,15 @@ class PasswordUtil {
     this.algorithm = 'sha512';
   }
 
-  generatePassword({length, includeSymbols = true, includeNumbers = true, includeUpper = true, includeLower = true}) {
+  generatePassword({ length, includeSymbols = true, includeNumbers = true, includeUpper = true, includeLower = true }) {
 
     if (!includeSymbols && !includeNumbers && !includeUpper && !includeLower) {
       throw new Error('At least one of includeSymbols, includeNumbers, includeUpper, or includeLower must be true');
     }
 
-    if(length <= 0) {
+    if (length <= 0) {
       throw new Error('password length must be larger than 0');
-    } 
+    }
 
     const getRandomChar = {
       lower: getRandomLower,
@@ -621,7 +621,7 @@ class PasswordUtil {
     function getRandomUpper() {
       return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
     }
-    
+
     function getRandomNumber() {
       return String.fromCharCode(Math.floor(getSecureValue() * 10) + 48)
     }
@@ -636,7 +636,7 @@ class PasswordUtil {
       const typesCount = lower + upper + number + symbol;
       const typesArr = [{ lower }, { upper }, { number }, { symbol }].filter((item) => Object.values(item)[0]);
 
-      if(typesCount === 0) {
+      if (typesCount === 0) {
         return "";
       }
 
@@ -668,35 +668,35 @@ class PasswordUtil {
       weaknesses.push(repeatCharactersWeakness(password));
       return weaknesses;
     }
-    
+
     function lengthWeakness(password) {
       const length = password.length;
-    
+
       if (length <= 5) {
         return {
           message: "Your password is too short",
         };
       }
-    
+
       if (length <= 10) {
         return {
           message: "Your password could be longer",
         };
       }
     }
-    
+
     function uppercaseWeakness(password) {
       return characterTypeWeakness(password, /[A-Z]/g, "uppercase characters");
     }
-    
+
     function lowercaseWeakness(password) {
       return characterTypeWeakness(password, /[a-z]/g, "lowercase characters");
     }
-    
+
     function numberWeakness(password) {
       return characterTypeWeakness(password, /[0-9]/g, "numbers");
     }
-    
+
     function specialCharactersWeakness(password) {
       return characterTypeWeakness(
         password,
@@ -704,23 +704,23 @@ class PasswordUtil {
         "special characters"
       );
     }
-    
+
     function characterTypeWeakness(password, regex, type) {
       const matches = password.match(regex) || [];
-    
+
       if (matches.length === 0) {
         return {
           message: `Your password has no ${type}`,
         };
       }
-    
+
       if (matches.length <= 2) {
         return {
           message: `Your password could use more ${type}`,
         };
       }
     }
-    
+
     function repeatCharactersWeakness(password) {
       const matches = password.match(/(.)\1/g) || [];
       if (matches.length > 0) {
@@ -734,7 +734,7 @@ class PasswordUtil {
     const newWeaknesses = []
     const final = pushByFilter(newWeaknesses, (v => v !== undefined), ...weaknesses);
 
-    if(final.length === 0) {
+    if (final.length === 0) {
       return 'No Weaknesses';
     }
 
@@ -750,6 +750,38 @@ class PasswordUtil {
     return crypto.randomBytes(length).toString('hex');
   }
 
+}
+
+// levenshtein distance calculator
+function minDistance(text, comparison) {
+  const m = text.length;
+  const n = comparison.length;
+  const dp = [];
+
+  for (let i = 0; i <= m; i++) {
+    dp[i] = [];
+    for (let j = 0; j <= n; j++) {
+      if (i === 0) {
+        dp[i][j] = j;
+      } else if (j === 0) {
+        dp[i][j] = i;
+      } else {
+        dp[i][j] = 0;
+      }
+    }
+  }
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (str1[i - 1] === str2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+      }
+    }
+  }
+
+  return dp[m][n];
 }
 
 module.exports = {
@@ -797,5 +829,6 @@ module.exports = {
   unescape,
   stripHTML,
   truncate,
-  PasswordUtil
+  PasswordUtil,
+  minDistance
 };
