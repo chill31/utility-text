@@ -76,6 +76,7 @@ function advanceReplace({ text, replacementText, replacement, countIndex, skip =
   let count = 0;
   let maxCount = countIndex;
   let skipCount = 0;
+  let regexCache = new Map();
 
   str = str.replace(new RegExp(word, "g"), function (match) {
     if (skipCount < skip) {
@@ -86,7 +87,14 @@ function advanceReplace({ text, replacementText, replacement, countIndex, skip =
       return match;
     }
     count++;
-    return replacement;
+    
+    let regex = regexCache.get(word);
+    if (!regex) {
+      regex = new RegExp(word, "g");
+      regexCache.set(word, regex);
+    }
+    
+    return match.replace(regex, replacement);
   });
 
   return str;
@@ -256,72 +264,36 @@ function multipleWrap({ text, charSet, wrapperSet }) {
   }
 
   const len = charSet.length;
+  const regexCache = new Map();
 
   for (let i = 0; i < len; i++) {
-    const regex = new RegExp(charSet[i], "g");
-    newText = newText.replace(regex, `${wrapperSet[i][0]}${charSet[i]}${wrapperSet[i][1]}`);
+    let regex;
+    if (charSet[i] instanceof RegExp) {
+      const pattern = charSet[i].toString().replace(/^\/|\/[a-z]*$/g, '');
+      if (regexCache.has(pattern)) {
+        regex = regexCache.get(pattern);
+      } else {
+        regex = new RegExp(pattern, charSet[i].flags);
+        regexCache.set(pattern, regex);
+      }
+    } else {
+      regex = new RegExp(charSet[i], "g");
+    }
+    newText = newText.replace(regex, `${wrapperSet[i][0]}$&${wrapperSet[i][1]}`);
   }
 
   return newText;
 }
 
-function compare(text1, text2) {
-  let differences = [];
-  let firstText = text1.toString();
-  let secondText = text2.toString();
-
-  let maxLen = Math.max(firstText.length, secondText.length);
-
-  const diffTypes = [
-    { message: "first text's index is non-existent while the second text's index exists.", code: 0 },
-    { message: "second text's index is non-existent while the first text's index exists.", code: 1 },
-    { message: "both indexes exist but are not equal", code: 2 }
-  ]
-
-  for (let i = 0; i < maxLen; i++) {
-
-    if (!firstText[i] && !!secondText[i]) {
-      differences.push({
-        firstText: null,
-        secondText: secondText[i],
-        difference: secondText[i],
-        atIndex: i,
-        type: diffTypes[0]
-
-      });
-    } else if (!secondText[i] && !!firstText[i]) {
-      differences.push({
-        firstText: firstText[i],
-        secondText: null,
-        difference: firstText[i],
-        atIndex: i,
-        type: diffTypes[1]
-      });
-    } else if (firstText[i] !== secondText[i]) {
-      differences.push({
-        firstText: firstText[i],
-        secondText: secondText[i],
-        difference: secondText[i],
-        atIndex: i,
-        type: diffTypes[2]
-      })
-    }
-
-  }
-
-  return differences;
-}
-
 function insertAt({ text, index, insertionText, before = false }) {
-  let newText = text;
-
-  if (text[index] === null || text[index] === undefined) throw new Error("the index must be existent in the provided text.");
-
-  if (before === true) {
-    newText = text.slice(0, index) + insertionText + text.slice(index);
-  } else {
-    newText = text.slice(0, index + 1) + insertionText + text.slice(index + 1);
+  if (index < 0 || index > text.length) {
+    throw new Error("Index out of bounds.");
   }
+
+  const prefix = text.slice(0, index);
+  const suffix = text.slice(index);
+
+  const newText = before ? prefix + insertionText + suffix : prefix + insertionText + suffix;
 
   return newText;
 }
@@ -353,83 +325,6 @@ function moveTextByPos({ text, coords, moveIndex }) {
 
 }
 
-function listSearch({ searchList, searchText, returnAll = false }) {
-  const matches = [];
-  const searchTextLC = normalize(searchText).toLowerCase();
-
-  for (let i = 0; i < searchList.length; i++) {
-    const string = normalize(searchList[i]).toLowerCase();
-
-    if (string.includes(searchTextLC)) {
-      const match = {
-        found: true,
-        search: searchText,
-        match: searchList[i],
-        index: i
-      };
-
-      if (!returnAll) {
-        return [match];
-      }
-
-      matches.push(match);
-    }
-  }
-
-  if (matches.length === 0) {
-    return [{
-      found: false,
-      search: searchText,
-      match: -1,
-      index: -1
-    }];
-  }
-
-  return matches;
-}
-
-function objectSearch({ searchList, searchText, searchKeys, returnAll = false }) {
-  const matches = new Set();
-  const searchTextLC = normalize(searchText).toLowerCase();
-  const numKeys = searchKeys.length;
-
-  for (const item of searchList) {
-    for (let j = 0; j < numKeys; j++) {
-      const key = searchKeys[j];
-      const string = normalize(item[key]).toLowerCase();
-
-      if (string.includes(searchTextLC)) {
-        const match = {
-          found: true,
-          search: searchText,
-          match: item[key],
-          object: item,
-          key: key,
-          index: searchList.indexOf(item)
-        };
-        matches.add(JSON.stringify(match));
-        if (!returnAll) {
-          return Array.from(matches).map(match => JSON.parse(match));
-        }
-      }
-    }
-  }
-
-  if (!matches.size) {
-    const noMatch = {
-      found: false,
-      search: searchText,
-      match: -1,
-      object: -1,
-      key: -1,
-      index: -1
-    };
-    return [noMatch];
-  }
-
-  return Array.from(matches).map(match => JSON.parse(match));
-}
-
 function encode(str) {
   let result = "";
   for (let i = 0; i < str.length; i++) {
@@ -451,14 +346,8 @@ function unslug(text) {
 }
 
 function pushByFilter(array, filter, ...items) {
-  let newArr = array;
-  for (let item of items) {
-    if (filter(item)) {
-      newArr.push(item);
-    }
-  }
-
-  return newArr;
+  const filteredItems = items.filter(filter);
+  return [...array, ...filteredItems];
 }
 
 function flatten(arr) {
@@ -473,25 +362,11 @@ function kebabCase(str) {
 }
 
 function pullByValue(array, ...values) {
-  for (const value of values) {
-    const index = array.indexOf(value);
-    if (index !== -1) {
-      array.splice(index, 1);
-    }
-  }
-
-  return array;
+  return array.filter(value => !values.includes(value));
 }
 
 function pullByIndex(array, ...indexes) {
-  for (let i = indexes.length - 1; i >= 0; i--) {
-    const index = indexes[i];
-    if (index >= 0 && index < array.length) {
-      array.splice(index, 1);
-    }
-  }
-
-  return array;
+  return array.filter((_, index) => !indexes.includes(index));
 }
 
 function toAcronym(text) {
@@ -749,7 +624,7 @@ class PasswordUtil {
 
 }
 
-// levenshtein distance calculator
+// levenshtein distance calculator. Not really a utility function, but just wanted to implement the algorithm somewhere.
 function minDistance(text, comparison) {
   const m = text.length;
   const n = comparison.length;
@@ -804,12 +679,9 @@ const allExports = {
   minMax,
   wrap,
   multipleWrap,
-  compare,
   insertAt,
   moveText,
   moveTextByPos,
-  listSearch,
-  objectSearch,
   encode,
   decode,
   unslug,
