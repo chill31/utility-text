@@ -338,7 +338,7 @@ function encode(str) {
 function decode(encodedStr) {
   let result = "";
   for (let i = 0; i < encodedStr.length; i += 2) {
-    result += String.fromCharCode(parseInt(encodedStr.substr(i, 2), 16));
+    result += String.fromCharCode(parseInt(encodedStr.substring(i, 2), 16));
   }
   return result;
 }
@@ -659,6 +659,161 @@ function minDistance(text, comparison) {
   return dp[m][n];
 }
 
+function toMorseCode(string) {
+  const morseCodeMap = {
+    'a': '.-',
+    'b': '-...',
+    'c': '-.-.',
+    'd': '-..',
+    'e': '.',
+    'f': '..-.',
+    'g': '--.',
+    'h': '....',
+    'i': '..',
+    'j': '.---',
+    'k': '-.-',
+    'l': '.-..',
+    'm': '--',
+    'n': '-.',
+    'o': '---',
+    'p': '.--.',
+    'q': '--.-',
+    'r': '.-.',
+    's': '...',
+    't': '-',
+    'u': '..-',
+    'v': '...-',
+    'w': '.--',
+    'x': '-..-',
+    'y': '-.--',
+    'z': '--..',
+    '0': '-----',
+    '1': '.----',
+    '2': '..---',
+    '3': '...--',
+    '4': '....-',
+    '5': '.....',
+    '6': '-....',
+    '7': '--...',
+    '8': '---..',
+    '9': '----.'
+  };
+
+  const splitString = string.toLowerCase().split("");
+  const morse = splitString.map((char) => {
+
+    if (char === ' ') return ' ';
+    else {
+
+      if (Object.keys(morseCodeMap).includes(char)) {
+        return morseCodeMap[char];
+      } else {
+        return char;
+      }
+
+    }
+
+  });
+
+  return morse.join(" ");
+}
+
+function fromMorseCodeToString(morseCode) {
+  const reverseMorseLookup = {
+    '.-': 'a',
+    '-...': 'b',
+    '-.-.': 'c',
+    '-..': 'd',
+    '.': 'e',
+    '..-.': 'f',
+    '--.': 'g',
+    '....': 'h',
+    '..': 'i',
+    '.---': 'j',
+    '-.-': 'k',
+    '.-..': 'l',
+    '--': 'm',
+    '-.': 'n',
+    '---': 'o',
+    '.--.': 'p',
+    '--.-': 'q',
+    '.-.': 'r',
+    '...': 's',
+    '-': 't',
+    '..-': 'u',
+    '...-': 'v',
+    '.--': 'w',
+    '-..-': 'x',
+    '-.--': 'y',
+    '--..': 'z',
+    '-----': '0',
+    '.----': '1',
+    '..---': '2',
+    '...--': '3',
+    '....-': '4',
+    '.....': '5',
+    '-....': '6',
+    '--...': '7',
+    '---..': '8',
+    '----.': '9',
+  };
+
+  const splitString = morseCode.split(" ");
+
+  const normal = splitString.map((char) => {
+
+    if (char === ' ') return ' ';
+    else {
+
+      if (Object.keys(reverseMorseLookup).includes(char)) {
+        return reverseMorseLookup[char];
+      } else {
+        return char;
+      }
+
+    }
+
+  });
+
+  return normal.join("");
+}
+
+function toBinary(inputString) {
+  let binaryString = '';
+  const encoder = new TextEncoder();
+
+  const encodedData = encoder.encode(inputString);
+
+  const buffer = encodedData.buffer;
+  const dataView = new DataView(buffer);
+  for (let i = 0; i < dataView.byteLength; i++) {
+    const byte = dataView.getUint8(i);
+    const binary = byte.toString(2).padStart(8, '0');
+    binaryString += binary;
+  }
+
+  return binaryString;
+}
+
+function fromBinaryToString(binaryString) {
+  let outputString = '';
+  const binaryArray = binaryString.match(/.{1,8}/g);
+  const byteLength = binaryArray.length;
+
+  const buffer = new ArrayBuffer(byteLength);
+  const dataView = new DataView(buffer);
+  for (let i = 0; i < byteLength; i++) {
+    const binary = binaryArray[i];
+    const byte = parseInt(binary, 2);
+    dataView.setUint8(i, byte);
+  }
+
+  const decoder = new TextDecoder();
+  outputString = decoder.decode(buffer);
+
+  return outputString;
+}
+
 export default {
   upper,
   lower,
@@ -702,5 +857,9 @@ export default {
   stripHTML,
   truncate,
   PasswordUtil,
-  minDistance
+  minDistance,
+  toMorseCode,
+  fromMorseCodeToString,
+  toBinary,
+  fromBinaryToString
 };
